@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #007BFF;
+            color: white;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background: #0056b3;
+        }
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px;
+        }
+        #result {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>English Grammar Quiz</h1>
+        <p id="timer">Time left: 15s</p>
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+        <p id="result"></p>
+    </div>
+    
+    <script>
+        const questions = [
+            // Have to vs. Must
+            { question: "You ____ be quiet in the library.", options: ["must", "mustn't", "had to"], answer: "must" },
+            { question: "I ____ follow the school rules.", options: ["have to", "must", "needn't"], answer: "have to" },
+            { question: "You ____ pay taxes in most countries.", options: ["must", "have to", "needn't"], answer: "have to" },
+            { question: "I ____ finish my homework before playing.", options: ["must", "have to", "needn't"], answer: "must" },
+            { question: "You ____ try this cake, it's amazing!", options: ["must", "have to", "need to"], answer: "must" },
+            
+            // Had to
+            { question: "I ____ wake up early yesterday.", options: ["had to", "must", "need to"], answer: "had to" },
+            { question: "She ____ leave the party early.", options: ["had to", "must", "needn't"], answer: "had to" },
+            { question: "We ____ finish the report last week.", options: ["had to", "must", "don't have to"], answer: "had to" },
+            { question: "They ____ take an exam last Monday.", options: ["had to", "must", "needn't"], answer: "had to" },
+            { question: "He ____ apologize for his mistake.", options: ["had to", "must", "need to"], answer: "had to" },
+            
+            // Mustn't vs. Don't Have to
+            { question: "You ____ smoke in the hospital.", options: ["mustn't", "don't have to", "need to"], answer: "mustn't" },
+            { question: "We ____ wear a uniform at this office.", options: ["mustn't", "don't have to", "must"], answer: "don't have to" },
+            { question: "Students ____ cheat on exams.", options: ["mustn't", "don't have to", "needn't"], answer: "mustn't" },
+            { question: "You ____ bring food. There's plenty.", options: ["don't have to", "mustn't", "need to"], answer: "don't have to" },
+            { question: "He ____ talk about the accident.", options: ["mustn't", "don't have to", "had to"], answer: "mustn't" },
+            
+            // Need to vs. Needn't
+            { question: "You ____ study hard to pass the test.", options: ["need to", "needn't", "must"], answer: "need to" },
+            { question: "We ____ leave early to catch the flight.", options: ["need to", "needn't", "mustn't"], answer: "need to" },
+            { question: "She ____ worry, everything is fine!", options: ["needn't", "need to", "must"], answer: "needn't" },
+            { question: "You ____ bring an umbrella, it’s not raining.", options: ["needn't", "need to", "mustn't"], answer: "needn't" },
+            { question: "They ____ be on time for the interview.", options: ["need to", "needn't", "must"], answer: "need to" },
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        let timer;
+        
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                document.getElementById("result").innerHTML = score === questions.length ? "Perfect score! Your code: ABC123" : "Your score: " + score + "/" + questions.length;
+                return;
+            }
+            
+            document.getElementById("question").innerText = questions[currentQuestion].question;
+            document.getElementById("options").innerHTML = "";
+            
+            questions[currentQuestion].options.forEach(option => {
+                let btn = document.createElement("button");
+                btn.innerText = option;
+                btn.onclick = () => checkAnswer(option);
+                document.getElementById("options").appendChild(btn);
+            });
+            
+            startTimer();
+        }
+        
+        function checkAnswer(answer) {
+            clearInterval(timer);
+            if (answer === questions[currentQuestion].answer) {
+                score++;
+            }
+            currentQuestion++;
+            loadQuestion();
+        }
+        
+        function startTimer() {
+            let timeLeft = 15;
+            document.getElementById("timer").innerText = "Time left: " + timeLeft + "s";
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById("timer").innerText = "Time left: " + timeLeft + "s";
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    currentQuestion++;
+                    loadQuestion();
+                }
+            }, 1000);
+        }
+        
+        loadQuestion();
+    </script>
+</body>
+</html>
