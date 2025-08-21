@@ -3,140 +3,565 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Quiz</title>
+    <title>Mystic Tarot Fortune Teller</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Georgia', serif;
+            color: #f0f0f0;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        .container {
-            width: 50%;
-            margin: auto;
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px gray;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
         }
-        .question {
-            font-size: 20px;
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 3.5em;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #c9ada7;
+            font-style: italic;
+        }
+
+        .card-selection {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .instruction {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            color: #e9c46a;
+        }
+
+        .card-deck {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 120px;
+            height: 200px;
+            background: linear-gradient(135deg, #2a1810 0%, #4a2c20 100%);
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.3);
+            border-color: #fff;
+        }
+
+        .card-back {
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #2a1810 0%, #4a2c20 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: #ffd700;
+        }
+
+        .draw-button {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            margin: 20px 10px;
+        }
+
+        .draw-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .fortune-display {
+            background: rgba(42, 24, 16, 0.8);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .drawn-card {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .card-name {
+            font-size: 2em;
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .card-image {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: #1a1a2e;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .fortune-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #f0f0f0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .future-prediction {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid #ffd700;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .prediction-type {
+            font-weight: bold;
+            color: #ffd700;
+            font-size: 1.1em;
             margin-bottom: 10px;
         }
-        .options button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: none;
-            background: #007BFF;
+
+        .reset-button {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
             color: white;
-            font-size: 18px;
-            border-radius: 5px;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            border-radius: 25px;
             cursor: pointer;
-        }
-        .options button:hover {
-            background: #0056b3;
-        }
-        #timer {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 10px;
-        }
-        #result {
-            font-size: 22px;
-            font-weight: bold;
+            transition: all 0.3s ease;
             margin-top: 20px;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 68, 173, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tips {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .tips h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .tips ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tips li:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5em;
+            }
+            
+            .card {
+                width: 80px;
+                height: 130px;
+            }
+            
+            .card-deck {
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>English Grammar Quiz</h1>
-        <p id="timer">Time left: 15s</p>
-        <div class="question" id="question"></div>
-        <div class="options" id="options"></div>
-        <p id="result"></p>
-    </div>
+    <div class="stars"></div>
     
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Mystic Tarot Oracle</h1>
+            <p class="subtitle">Unveil the mysteries of your future</p>
+        </div>
+
+
+
+        <div class="card-selection">
+            <p class="instruction">Choose your mystical path by selecting 3 cards from the deck below...</p>
+            
+            <div class="card-deck">
+                <div class="card" onclick="selectCard(0)">
+                    <div class="card-back">✦</div>
+                </div>
+                <div class="card" onclick="selectCard(1)">
+                    <div class="card-back">✧</div>
+                </div>
+                <div class="card" onclick="selectCard(2)">
+                    <div class="card-back">✦</div>
+                </div>
+                <div class="card" onclick="selectCard(3)">
+                    <div class="card-back">✧</div>
+                </div>
+                <div class="card" onclick="selectCard(4)">
+                    <div class="card-back">✦</div>
+                </div>
+                <div class="card" onclick="selectCard(5)">
+                    <div class="card-back">✧</div>
+                </div>
+                <div class="card" onclick="selectCard(6)">
+                    <div class="card-back">✦</div>
+                </div>
+            </div>
+
+            <button class="draw-button" onclick="drawRandomCard()">Draw Random Card</button>
+            <button class="draw-button" onclick="drawThreeCards()">Draw 3 Cards Reading</button>
+        </div>
+
+        <div id="fortune" class="fortune-display hidden">
+            <div class="drawn-card">
+                <h2 class="card-name" id="cardName"></h2>
+                <div class="card-image" id="cardImage"></div>
+            </div>
+            <div class="fortune-text" id="fortuneText"></div>
+            <div id="predictions"></div>
+            <button class="reset-button" onclick="resetReading()">New Reading</button>
+        </div>
+    </div>
+
     <script>
-        const questions = [
-            // Have to vs. Must
-            { question: "You ____ be quiet in the library.", options: ["must", "mustn't", "had to"], answer: "must" },
-            { question: "I ____ follow the school rules.", options: ["have to", "must", "needn't"], answer: "have to" },
-            { question: "You ____ pay taxes in most countries.", options: ["must", "have to", "needn't"], answer: "have to" },
-            { question: "I ____ finish my homework before playing.", options: ["must", "have to", "needn't"], answer: "must" },
-            { question: "You ____ try this cake, it's amazing!", options: ["must", "have to", "need to"], answer: "must" },
-            
-            // Had to
-            { question: "I ____ wake up early yesterday.", options: ["had to", "must", "need to"], answer: "had to" },
-            { question: "She ____ leave the party early.", options: ["had to", "must", "needn't"], answer: "had to" },
-            { question: "We ____ finish the report last week.", options: ["had to", "must", "don't have to"], answer: "had to" },
-            { question: "They ____ take an exam last Monday.", options: ["had to", "must", "needn't"], answer: "had to" },
-            { question: "He ____ apologize for his mistake.", options: ["had to", "must", "need to"], answer: "had to" },
-            
-            // Mustn't vs. Don't Have to
-            { question: "You ____ smoke in the hospital.", options: ["mustn't", "don't have to", "need to"], answer: "mustn't" },
-            { question: "We ____ wear a uniform at this office.", options: ["mustn't", "don't have to", "must"], answer: "don't have to" },
-            { question: "Students ____ cheat on exams.", options: ["mustn't", "don't have to", "needn't"], answer: "mustn't" },
-            { question: "You ____ bring food. There's plenty.", options: ["don't have to", "mustn't", "need to"], answer: "don't have to" },
-            { question: "He ____ talk about the accident.", options: ["mustn't", "don't have to", "had to"], answer: "mustn't" },
-            
-            // Need to vs. Needn't
-            { question: "You ____ study hard to pass the test.", options: ["need to", "needn't", "must"], answer: "need to" },
-            { question: "We ____ leave early to catch the flight.", options: ["need to", "needn't", "mustn't"], answer: "need to" },
-            { question: "She ____ worry, everything is fine!", options: ["needn't", "need to", "must"], answer: "needn't" },
-            { question: "You ____ bring an umbrella, it’s not raining.", options: ["needn't", "need to", "mustn't"], answer: "needn't" },
-            { question: "They ____ be on time for the interview.", options: ["need to", "needn't", "must"], answer: "need to" },
-        ];
-        
-        let currentQuestion = 0;
-        let score = 0;
-        let timer;
-        
-        function loadQuestion() {
-            if (currentQuestion >= questions.length) {
-                document.getElementById("result").innerHTML = score === questions.length ? "Perfect score! Your code: ABC123" : "Your score: " + score + "/" + questions.length;
-                return;
-            }
-            
-            document.getElementById("question").innerText = questions[currentQuestion].question;
-            document.getElementById("options").innerHTML = "";
-            
-            questions[currentQuestion].options.forEach(option => {
-                let btn = document.createElement("button");
-                btn.innerText = option;
-                btn.onclick = () => checkAnswer(option);
-                document.getElementById("options").appendChild(btn);
-            });
-            
-            startTimer();
-        }
-        
-        function checkAnswer(answer) {
-            clearInterval(timer);
-            if (answer === questions[currentQuestion].answer) {
-                score++;
-            }
-            currentQuestion++;
-            loadQuestion();
-        }
-        
-        function startTimer() {
-            let timeLeft = 15;
-            document.getElementById("timer").innerText = "Time left: " + timeLeft + "s";
-            
-            timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById("timer").innerText = "Time left: " + timeLeft + "s";
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    currentQuestion++;
-                    loadQuestion();
+        const tarotCards = [
+            {
+                name: "The Magician",
+                symbol: "🎭",
+                meaning: "Manifestation and willpower",
+                predictions: {
+                    will: "You will discover a hidden talent that will change your career path completely.",
+                    goingTo: "You are going to start a creative project that will bring you recognition.",
+                    present: "Your presentation starts at 9 AM next Monday and lasts exactly 2 minutes."
                 }
-            }, 1000);
+            },
+            {
+                name: "The High Priestess",
+                symbol: "🌙",
+                meaning: "Intuition and wisdom",
+                predictions: {
+                    will: "You will receive important news through an unexpected message.",
+                    goingTo: "You are going to meet someone who will become a lifelong friend.",
+                    present: "The library closes at 6 PM today, giving you time to study."
+                }
+            },
+            {
+                name: "The Empress",
+                symbol: "👑",
+                meaning: "Abundance and creativity",
+                predictions: {
+                    will: "You will inherit something valuable from a family member.",
+                    goingTo: "You are going to move to a new home with a beautiful garden.",
+                    present: "Your birthday party begins at 7 PM this Saturday."
+                }
+            },
+            {
+                name: "The Emperor",
+                symbol: "⚡",
+                meaning: "Authority and control",
+                predictions: {
+                    will: "You will be promoted to a leadership position within six months.",
+                    goingTo: "You are going to take charge of an important family decision.",
+                    present: "The meeting takes place every Wednesday at 3 PM sharp."
+                }
+            },
+            {
+                name: "The Fool",
+                symbol: "🎪",
+                meaning: "New beginnings",
+                predictions: {
+                    will: "You will embark on an adventure that will take you to three different countries.",
+                    goingTo: "You are going to start learning a completely new skill next month.",
+                    present: "Your flight departs at 11:45 AM from gate B12."
+                }
+            },
+            {
+                name: "The Lovers",
+                symbol: "💕",
+                meaning: "Relationships and choices",
+                predictions: {
+                    will: "You will fall in love with someone you least expect.",
+                    goingTo: "You are going to attend a wedding where you'll meet your soulmate.",
+                    present: "The romantic dinner is scheduled for 8 PM at the rooftop restaurant."
+                }
+            },
+            {
+                name: "The Chariot",
+                symbol: "🏆",
+                meaning: "Determination and success",
+                predictions: {
+                    will: "You will win a competition that you didn't think you could win.",
+                    goingTo: "You are going to buy your dream car before the end of this year.",
+                    present: "The race starts at sunrise and finishes at sunset."
+                }
+            },
+            {
+                name: "Wheel of Fortune",
+                symbol: "🎯",
+                meaning: "Luck and cycles",
+                predictions: {
+                    will: "You will experience a stroke of incredible luck next Tuesday.",
+                    goingTo: "You are going to win money in an unexpected way.",
+                    present: "The lottery draw happens every Friday at 9 PM on channel 7."
+                }
+            },
+            {
+                name: "The Star",
+                symbol: "⭐",
+                meaning: "Hope and inspiration",
+                predictions: {
+                    will: "You will become famous for something you create with your own hands.",
+                    goingTo: "You are going to inspire others to follow their dreams.",
+                    present: "The shooting stars appear every night at midnight this week."
+                }
+            },
+            {
+                name: "The Sun",
+                symbol: "☀️",
+                meaning: "Joy and success",
+                predictions: {
+                    will: "You will have the happiest year of your life starting this summer.",
+                    goingTo: "You are going to celebrate a major achievement with your family.",
+                    present: "The sun rises at 6:30 AM and sets at 7:45 PM today."
+                }
+            },
+            {
+                name: "The World",
+                symbol: "🌍",
+                meaning: "Completion and fulfillment",
+                predictions: {
+                    will: "You will travel around the world and visit all seven continents.",
+                    goingTo: "You are going to achieve a goal you've been working on for years.",
+                    present: "The world championship takes place every four years in July."
+                }
+            },
+            {
+                name: "Death",
+                symbol: "🦋",
+                meaning: "Transformation and renewal",
+                predictions: {
+                    will: "You will completely transform your lifestyle in the most positive way.",
+                    goingTo: "You are going to end an old chapter and begin an exciting new one.",
+                    present: "The transformation program starts every Monday at 6 AM."
+                }
+            }
+        ];
+
+        let selectedCards = [];
+        let drawnCards = [];
+
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
         }
-        
-        loadQuestion();
+
+        function selectCard(index) {
+            if (selectedCards.length < 3 && !selectedCards.includes(index)) {
+                selectedCards.push(index);
+                const card = document.querySelectorAll('.card')[index];
+                card.style.transform = 'translateY(-15px) scale(1.1)';
+                card.style.borderColor = '#fff';
+                card.style.boxShadow = '0 15px 35px rgba(255, 255, 255, 0.3)';
+            }
+        }
+
+        function drawRandomCard() {
+            const randomIndex = Math.floor(Math.random() * tarotCards.length);
+            const card = tarotCards[randomIndex];
+            displayFortune([card]);
+        }
+
+        function drawThreeCards() {
+            const shuffled = [...tarotCards].sort(() => Math.random() - 0.5);
+            const threeCards = shuffled.slice(0, 3);
+            displayFortune(threeCards);
+        }
+
+        function displayFortune(cards) {
+            const fortuneDiv = document.getElementById('fortune');
+            const cardName = document.getElementById('cardName');
+            const cardImage = document.getElementById('cardImage');
+            const fortuneText = document.getElementById('fortuneText');
+            const predictions = document.getElementById('predictions');
+
+            if (cards.length === 1) {
+                // Single card reading
+                const card = cards[0];
+                cardName.textContent = card.name;
+                cardImage.textContent = card.symbol;
+                fortuneText.textContent = `The cards reveal: ${card.meaning}`;
+
+                predictions.innerHTML = `
+                    <div class="future-prediction">
+                        <div class="prediction-type">Immediate Future:</div>
+                        <p>${card.predictions.will}</p>
+                    </div>
+                    <div class="future-prediction">
+                        <div class="prediction-type">Planned Events:</div>
+                        <p>${card.predictions.goingTo}</p>
+                    </div>
+                    <div class="future-prediction">
+                        <div class="prediction-type">Scheduled Events:</div>
+                        <p>${card.predictions.present}</p>
+                    </div>
+                `;
+            } else {
+                // Three card reading
+                cardName.textContent = "Three Card Reading";
+                cardImage.innerHTML = `${cards[0].symbol} ${cards[1].symbol} ${cards[2].symbol}`;
+                fortuneText.textContent = "Past, Present, and Future revealed through the mystical cards...";
+
+                predictions.innerHTML = `
+                    <div class="future-prediction">
+                        <div class="prediction-type">Past Influence - ${cards[0].name}:</div>
+                        <p>${cards[0].predictions.will}</p>
+                    </div>
+                    <div class="future-prediction">
+                        <div class="prediction-type">Present Situation - ${cards[1].name}:</div>
+                        <p>${cards[1].predictions.goingTo}</p>
+                    </div>
+                    <div class="future-prediction">
+                        <div class="prediction-type">Future Outcome - ${cards[2].name}:</div>
+                        <p>${cards[2].predictions.present}</p>
+                    </div>
+                    <div class="future-prediction">
+                        <div class="prediction-type">Overall Message:</div>
+                        <p>The cards show that you will experience significant changes. You are going to overcome current challenges through wisdom gained from past experiences. Your future holds great promise, and important events are scheduled to unfold at precisely the right moments.</p>
+                    </div>
+                `;
+            }
+
+            fortuneDiv.classList.remove('hidden');
+            fortuneDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetReading() {
+            document.getElementById('fortune').classList.add('hidden');
+            selectedCards = [];
+            drawnCards = [];
+            
+            // Reset card appearances
+            document.querySelectorAll('.card').forEach(card => {
+                card.style.transform = '';
+                card.style.borderColor = '#ffd700';
+                card.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
+            });
+        }
+
+        // Initialize the page
+        createStars();
     </script>
 </body>
-</html>
+</html> 
